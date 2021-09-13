@@ -19,12 +19,24 @@ const showProducts = (products) => {
       <h3>${product.title}</h3>
       <p>Category: ${product.category}</p>
       <h2>Price: $ ${product.price}</h2>
+      <h4>Rating: ${product.rating.rate} Total Rating: ${product.rating.count}</h4>
       <button onclick="addToCart(${product.id},${product.price})" id="addToCart-btn" class="buy-now btn btn-success">add to cart</button>
-      <button id="details-btn" class="btn btn-danger">Details</button></div>
+      <button onclick="productDetails(${product.id})" id="details-btn" class="btn btn-danger">Details</button></div>
       `;
     document.getElementById("all-products").appendChild(div);
   }
 };
+const productDetails = (id) => {
+  const url = `https://fakestoreapi.com/products/${id}`;
+  // console.log(url);
+  fetch(url)
+    .then(res => res.json())
+    .then(json => showDetails(json))
+}
+const showDetails = (data) => {
+  document.getElementById('show-details').innerHTML = `<p>Description: ${data.description}</p>`;
+}
+
 let count = 0;
 const addToCart = (id, price) => {
   count = count + 1;
@@ -56,18 +68,19 @@ const setInnerText = (id, value) => {
 
 // update delivery charge and total Tax
 const updateTaxAndCharge = () => {
-  const priceConverted = getInputValue("price");
+  // const priceConverted = getInputValue("price");
+  const priceConverted = document.getElementById("price").innerText;
   if (priceConverted > 200) {
     setInnerText("delivery-charge", 30);
-    setInnerText("total-tax", priceConverted * 0.2);
+    document.getElementById('total-tax').innerText = (priceConverted * 0.2).toFixed(2);
   }
   if (priceConverted > 400) {
     setInnerText("delivery-charge", 50);
-    setInnerText("total-tax", priceConverted * 0.3);
+    document.getElementById('total-tax').innerText = (priceConverted * 0.3).toFixed(2);
   }
   if (priceConverted > 500) {
     setInnerText("delivery-charge", 60);
-    setInnerText("total-tax", priceConverted * 0.4);
+    document.getElementById('total-tax').innerText = (priceConverted * 0.4).toFixed(2);
   }
 };
 
